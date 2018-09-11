@@ -1,0 +1,7 @@
+[package]
+name = "fibonacci-functions"
+version = "0.1.0"
+authors = ["YangBy <yby@yangby.org>"]
+
+[dependencies]
+num-bigint = "0.2"

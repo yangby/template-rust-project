@@ -1,0 +1,15 @@
+[package]
+name = "fibonacci-common"
+version = "0.1.0"
+authors = ["YangBy <yby@yangby.org>"]
+
+[dependencies]
+fibonacci-macros = { path = "internals/macros" }
+fibonacci-functions = { path = "internals/functions" }
+
+[dev-dependencies]
+criterion = "0.2"
+
+[[bench]]
+name = "fibonacci"
+harness = false
