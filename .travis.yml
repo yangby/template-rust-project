@@ -1,0 +1,90 @@
+sudo: false
+language: generic
+notifications:
+  email: false
+git:
+  depth: 5
+cache:
+  timeout: 600
+  directories:
+    - ${HOME}/.local/rustup
+    - ${HOME}/.local/cargo
+    - ${HOME}/.cargo
+    - ${TRAVIS_BUILD_DIR}/target
+stages:
+  - Setup
+  - Check
+  - CheckMore
+  - Build
+  - Test
+jobs:
+  include:
+
+    - stage: Setup
+      name: Setup
+      before_install:
+        - &setenv-export
+          |
+            export RUSTUP_HOME="${HOME}/.local/rustup"
+            export CARGO_HOME="${HOME}/.local/cargo"
+      install:
+        - |
+            if [ -f "${CARGO_HOME}/env" ]; then
+                source "${CARGO_HOME}/env"
+                rustup self update
+                rustup update
+                cargo install-update -a
+            else
+                travis_retry curl https://sh.rustup.rs -sSf \
+                    | sh -s -- --default-toolchain nightly --no-modify-path -y
+                source "${CARGO_HOME}/env"
+                rustup default nightly
+                travis_wait cargo install cargo-update
+                travis_wait make install-dev
+            fi
+      before_script:
+        - rustup --version
+        - cargo --version
+        - rustc --version
+      script: rustup show
+
+    - stage: Check
+      name: Format
+      install: &setenv
+        - *setenv-export
+        - &setenv-source
+          source "${CARGO_HOME}/env"
+      before_script: cargo fmt --version
+      script: make format-check
+
+    - stage: Check
+      name: Dependencies
+      install: *setenv
+      script: make deps-check
+
+    - stage: CheckMore
+      name: Lint
+      install: *setenv
+      before_script: cargo clippy --version
+      script: make lint-check
+
+    - stage: CheckMore
+      name: Security
+      install: *setenv
+      before_script: cargo audit --version
+      script: make security-check
+
+    - stage: Build
+      name: Build
+      install: *setenv
+      script: make build
+
+    - stage: Test
+      name: UnitTest
+      install: *setenv
+      script: make test
+
+    - stage: Test
+      name: Bench
+      install: *setenv
+      script: make bench || true
