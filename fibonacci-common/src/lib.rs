@@ -47,32 +47,32 @@ mod test {
     #[test]
     fn fibonacci_raw() {
         let y: Vec<usize> = vec![0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55];
-        for x in 0usize..y.len() {
-            assert_eq!(super::fibonacci_raw(x), super::BigUint::from(y[x]));
+        for (x, item) in y.iter().enumerate() {
+            assert_eq!(super::fibonacci_raw(x), super::BigUint::from(*item));
         }
         assert_eq!(
             super::fibonacci_raw(64),
-            super::BigUint::from(10610209857723usize)
+            super::BigUint::from(10_610_209_857_723usize)
         );
         assert_eq!(
             super::fibonacci_raw(93),
-            super::BigUint::from(12200160415121876738usize)
+            super::BigUint::from(12_200_160_415_121_876_738usize)
         );
     }
 
     #[test]
     fn fibonacci() {
         let y: Vec<usize> = vec![0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55];
-        for x in 0usize..y.len() {
-            assert_eq!(super::fibonacci(x), super::BigUint::from(y[x]));
+        for (x, item) in y.iter().enumerate() {
+            assert_eq!(super::fibonacci(x), super::BigUint::from(*item));
         }
         assert_eq!(
             super::fibonacci(64),
-            super::BigUint::from(10610209857723usize)
+            super::BigUint::from(10_610_209_857_723usize)
         );
         assert_eq!(
             super::fibonacci(93),
-            super::BigUint::from(12200160415121876738usize)
+            super::BigUint::from(12_200_160_415_121_876_738usize)
         );
     }
 
